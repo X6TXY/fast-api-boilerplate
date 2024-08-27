@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.db import Base, async_engine, get_async_db
+from auth.auth import router as auth_router
 
 load_dotenv(Path(__file__).parent.parent / '.env')
 
@@ -41,3 +42,6 @@ async def check_health(db: AsyncSession = Depends(get_async_db)):
         raise HTTPException(status_code=500, detail="Redis connection failed")
 
     return {"status": "ok", "database": "connected", "redis": "connected"}
+
+
+app.include_router(auth_router, prefix="/auth", tags=["auth"])
